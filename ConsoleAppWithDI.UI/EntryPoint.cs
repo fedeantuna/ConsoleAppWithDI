@@ -1,6 +1,7 @@
 using System;
 using ConsoleAppWithDI.UI.Services;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace ConsoleAppWithDI.UI
 {
@@ -8,18 +9,22 @@ namespace ConsoleAppWithDI.UI
     {
         private readonly IQuadraticService _quadraticService;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<EntryPoint> _logger;
 
-        public EntryPoint(IQuadraticService quadraticService, IConfiguration configuration)
+        public EntryPoint(IQuadraticService quadraticService, IConfiguration configuration, ILogger<EntryPoint> logger)
         {
             this._quadraticService = quadraticService;
             this._configuration = configuration;
+            this._logger = logger;
         }
 
         public void Run(String[] args)
         {
-            var a = Double.Parse(this._configuration["PolynomialCoefficients:A"]);
-            var b = Double.Parse(this._configuration["PolynomialCoefficients:B"]);
-            var c = Double.Parse(this._configuration["PolynomialCoefficients:C"]);
+            var a = Double.Parse(args[0]);
+            var b = Double.Parse(args[1]);
+            var c = Double.Parse(args[2]);
+
+            this._logger.LogDebug("The coefficients have been set!");
 
             var quadraticRoots = this._quadraticService.CalculateRoots(a, b, c);
 

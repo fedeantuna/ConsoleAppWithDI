@@ -2,6 +2,7 @@ using System.IO;
 using ConsoleAppWithDI.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace ConsoleAppWithDI.UI
 {
@@ -16,6 +17,12 @@ namespace ConsoleAppWithDI.UI
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
             IConfiguration configuration = builder.Build();
             services.AddSingleton(configuration);
+
+            services.AddLogging(builder =>
+            {
+                builder.AddConfiguration(configuration.GetSection("Logging"));
+                builder.AddConsole();
+            });
 
             services.AddSingleton<IQuadraticService, QuadraticService>();
 
